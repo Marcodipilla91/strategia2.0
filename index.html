@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area Strategia | Operia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="strategia5.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo-wrap">
+            <div class="logo-ring">O</div>
+            <span class="logo-text">Operia</span>
+        </div>
+        <div class="user-wrap">
+            <img src="https://api.dicebear.com/7.x/initials/svg?seed=GianlucaTorre&backgroundColor=e0e0e0&textColor=555"
+                class="u-avatar" alt="GT">
+            <div>
+                <div class="u-name">Gianluca Torre</div>
+                <div class="u-role">Sustainability Manager</div>
+            </div>
+            <span class="u-edit">✎</span>
+        </div>
+        <nav class="nav">
+            <a class="ni" href="#">👤 Area personale</a>
+            <a class="ni" href="#">💬 Chat consulente</a>
+            <a class="ni" href="#">🎫 I miei ticket</a>
+            <div class="sep"></div>
+            <a class="ni" href="#">⊞ Dashboard</a>
+            <a class="ni" href="#">◧ Progetti</a>
+            <a class="ni active" href="#">◈ Strategia</a>
+            <a class="ni" href="#">▦ ESG Report</a>
+            <a class="ni" href="#">◉ Engagement</a>
+            <a class="ni" href="#">◎ Academy <span class="badge-new">New!</span></a>
+            <a class="ni" href="#">◍ Stakeholders</a>
+            <div class="sep"></div>
+            <a class="ni" href="#">→ Logout</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Area Strategia</div>
+                <div class="topbar-sub">Gestisci gli obiettivi ESG e monitora la loro integrazione con la strategia di
+                    business dell'azienda.</div>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn-ghost" id="btnNuovoBiz">Nuovo obiettivo Business +</button>
+                <button class="btn-primary" id="btnNuovoESG">Nuovo obiettivo ESG +</button>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- TABS -->
+            <div class="tabs-nav">
+                <div class="tab-item active" data-tab="esg">Area ESG</div>
+                <div class="tab-item" data-tab="business">Area Business</div>
+                <div class="tab-indicator"></div>
+            </div>
+
+            <!-- FILTERS BAR -->
+            <div class="filters-bar">
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input class="fi-search" id="search" placeholder="Cerca obiettivi…" oninput="applyFilters()">
+                </div>
+
+                <select class="fi-sel" id="filterDept" onchange="applyFilters()">
+                    <option value="">Tutti i reparti</option>
+                    <option value="HR">HR & Organization</option>
+                    <option value="Finance">Finance & Administration</option>
+                    <option value="Operations">Operations & Production</option>
+                    <option value="Sales">Sales & Marketing</option>
+                    <option value="R&D">R&D / Innovation</option>
+                    <option value="Procurement">Procurement / Supply Chain</option>
+                    <option value="IT">IT & Digital</option>
+                    <option value="Legal">Legal & Compliance</option>
+                </select>
+
+                <select class="fi-sel" id="filterStatus" onchange="applyFilters()">
+                    <option value="">Stato obiettivo</option>
+                    <option value="verde">In piano</option>
+                    <option value="giallo">In attenzione</option>
+                    <option value="rosso">A rischio</option>
+                </select>
+
+                <div class="date-range">
+                    <input class="fi-date" type="date" id="dateStart" onchange="applyFilters()" title="Dalla data">
+                    <span class="date-sep">-</span>
+                    <input class="fi-date" type="date" id="dateEnd" onchange="applyFilters()" title="Alla data">
+                </div>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="summary-row" id="summaryRow"><!-- JS --></div>
+
+            <!-- LIST CONTAINER -->
+            <div class="list-section">
+                <div class="list-header-row" id="listHeader"><!-- JS --></div>
+                <div id="mainList"><!-- JS --></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL OVERLAY -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box" id="modalBox"></div>
+    </div>
+
+    <script src="strategia5.js"></script>
+</body>
+
+</html>
