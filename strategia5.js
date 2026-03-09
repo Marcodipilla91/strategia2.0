@@ -155,7 +155,7 @@ function renderAll() {
   const sems = obESG.map(calcSem);
   $('summaryRow').innerHTML = `
     <div class="sum-card"><span class="sum-ico">🎯</span><div><div class="sum-num">${obESG.length}</div><div class="sum-lbl">Obiettivi ESG</div></div></div>
-    <div class="sum-card"><span class="sum-ico" style="color:#4CAF50">✅</span><div><div class="sum-num" style="color:#2E7D32">${sems.filter(x => x === 'verde').length}</div><div class="sum-lbl" style="color:#2E7D32">In piano</div></div></div>
+    <div class="sum-card"><span class="sum-ico" style="color:#4CAF50">✅</span><div><div class="sum-num" style="color:#2E7D32">${sems.filter(x => x === 'verde').length}</div><div class="sum-lbl" style="color:#2E7D32">Tutto ok</div></div></div>
     <div class="sum-card"><span class="sum-ico" style="color:#F59E0B">⚠️</span><div><div class="sum-num" style="color:#92400E">${sems.filter(x => x === 'giallo').length}</div><div class="sum-lbl" style="color:#92400E">Attenzione</div></div></div>
     <div class="sum-card"><span class="sum-ico" style="color:#EF4444">🔴</span><div><div class="sum-num" style="color:#991B1B">${sems.filter(x => x === 'rosso').length}</div><div class="sum-lbl" style="color:#991B1B">A rischio</div></div></div>
   `;
@@ -171,7 +171,7 @@ function renderESGTab() {
     <div class="lh-col col-own">Owner</div>
     <div class="lh-col col-tgt">Prospettiva KPI</div>
     <div class="lh-col col-scad">Prox. Scadenza</div>
-    <div class="lh-col col-sem">Stato</div>
+    <div class="lh-col col-sem">Stato <span class="info-icon" data-tooltip="🟢 Tutto ok: nessun ritardo oltre le 4 settimane&#10;🟡 Attenzione: ritardi tra 4 e 12 settimane&#10;🔴 A rischio: ritardi oltre le 12 settimane">i</span></div>
   `;
 
   let list = obESG.filter(o => {
@@ -193,7 +193,7 @@ function renderESGTab() {
 
   $('mainList').innerHTML = list.map(o => {
     const sem = calcSem(o);
-    const semLabel = sem === 'verde' ? 'In piano' : sem === 'giallo' ? 'Attenzione' : 'A rischio';
+    const semLabel = sem === 'verde' ? 'Tutto ok' : sem === 'giallo' ? 'Attenzione' : 'A rischio';
     const nt = getNearestTarget(o);
     const prog = calcGlobalProgress(o);
     const isExp = nt && new Date(nt.date) < TODAY;
@@ -335,7 +335,7 @@ function renderBizTab() {
             const nt = getNearestTarget(o);
             const prog = calcGlobalProgress(o);
             const sem = calcSem(o);
-            const semLabel = sem === 'verde' ? 'In piano' : sem === 'giallo' ? 'Attenzione' : 'A rischio';
+            const semLabel = sem === 'verde' ? 'Tutto ok' : sem === 'giallo' ? 'Attenzione' : 'A rischio';
             const projs = o.progetti.map(pid => progettiLiberi.find(pl => pl.id === pid)).filter(Boolean);
             return `
               <div class="cascade-esg-block">
@@ -494,31 +494,18 @@ function _renderBizFormHTML() {
   }
 
   const categorie = ['Crescita', 'Efficienza', 'Mercato', 'Rischio', 'Reputazione', 'Innovazione'];
-  const icone = [
-    { v: '📈', l: '📈 Crescita' }, { v: '🌍', l: '🌍 Mercati / Internazionale' },
-    { v: '⚙️', l: '⚙️ Efficienza / Costi' }, { v: '💳', l: '💳 Finanza' },
-    { v: '🛡️', l: '🛡️ Rischi' }, { v: '🎯', l: '🎯 Strategia generica' }
-  ];
 
   return `
     <div class="fg">
       <label class="fl">Nome Obiettivo *</label>
       <input class="fi" id="newBizName" value="${d.nome}" placeholder="Es. Riduzione dei costi OPEX">
     </div>
-    <div class="fg2">
-      <div class="fg">
-        <label class="fl">Categoria</label>
-        <select class="fi" id="newBizCategoria">
-          <option value="">Seleziona categoria…</option>
-          ${categorie.map(c => `<option value="${c}" ${d.categoria === c ? 'selected' : ''}>${c}</option>`).join('')}
-        </select>
-      </div>
-      <div class="fg">
-        <label class="fl">Icona</label>
-        <select class="fi" id="newBizIcon">
-          ${icone.map(i => `<option value="${i.v}" ${d.icona === i.v ? 'selected' : ''}>${i.l}</option>`).join('')}
-        </select>
-      </div>
+    <div class="fg">
+      <label class="fl">Categoria</label>
+      <select class="fi" id="newBizCategoria">
+        <option value="">Seleziona categoria…</option>
+        ${categorie.map(c => `<option value="${c}" ${d.categoria === c ? 'selected' : ''}>${c}</option>`).join('')}
+      </select>
     </div>
     <div style="background:#f4f6f8; border-radius:12px; padding:18px; border:1px solid #e2e8f0; margin-top:4px;">
       <div class="sec-title" style="margin-bottom:16px">📊 KPI di Riferimento</div>
@@ -528,12 +515,10 @@ function _renderBizFormHTML() {
           <select class="fi" id="newBizKpiTipo">
             <option value="%" ${d.kpiTipo === '%' ? 'selected' : ''}>% (Percentuale)</option>
             <option value="N°" ${d.kpiTipo === 'N°' ? 'selected' : ''}>N° (Numerico)</option>
-            <option value="K€" ${d.kpiTipo === 'K€' ? 'selected' : ''}>K€ (Migliaia €)</option>
-            <option value="ton" ${d.kpiTipo === 'ton' ? 'selected' : ''}>ton (Tonnellate)</option>
           </select>
         </div>
         <div class="fg" style="margin:0">
-          <label class="fl">Label KPI</label>
+          <label class="fl">Descrizione KPI</label>
           <input class="fi" id="newBizKpiLabel" value="${d.kpiLabel}" placeholder="Es. Crescita fatturato">
         </div>
       </div>
@@ -609,9 +594,7 @@ function _renderESGFormHTML() {
           <label class="fl">Unità di Misura</label>
           <select class="fi" id="m_unita">
             <option value="%" ${d.unita === '%' ? 'selected' : ''}>% (Percentuale)</option>
-            <option value="n." ${d.unita === 'n.' ? 'selected' : ''}>n. (Numero assoluto)</option>
-            <option value="ton" ${d.unita === 'ton' ? 'selected' : ''}>ton (Tonnellate)</option>
-            <option value="K€" ${d.unita === 'K€' ? 'selected' : ''}>K€ (Migliaia di Euro)</option>
+            <option value="n." ${d.unita === 'n.' ? 'selected' : ''}>N° (Numero assoluto)</option>
           </select>
         </div>
       </div>
@@ -638,36 +621,12 @@ function _renderProgettoFormHTML() {
   const projContext = _projectLinkContext ? obESG.find(x => x.id === _projectLinkContext) : null;
 
   return `
-    <div class="fg">
-      <label class="fl">Nome Progetto *</label>
-      <input class="fi" id="newProjNome" placeholder="Es. Audit energetico sedi">
+    <div class="proj-placeholder-notice">
+      <div class="proj-placeholder-icon">📋</div>
+      <div class="proj-placeholder-title">Stessa schermata dell'area Crea Progetto ESG</div>
+      <div class="proj-placeholder-sub">La creazione dei progetti operativi avviene nell'area dedicata del modulo Progetti, mantenendo un'unica fonte di verità per tutta la piattaforma.</div>
+      ${projContext ? `<div class="quick-link-notice" style="margin-top:16px; text-align:left">✓ Una volta creato, il progetto sarà collegato automaticamente a: <strong>${projContext.nome}</strong></div>` : ''}
     </div>
-    <div class="fg2">
-      <div class="fg">
-        <label class="fl">Avanzamento (%)</label>
-        <input class="fi" type="number" id="newProjPct" min="0" max="100" value="0" placeholder="0">
-      </div>
-      <div class="fg">
-        <label class="fl">Stato</label>
-        <select class="fi" id="newProjSem">
-          <option value="verde">🟢 In piano</option>
-          <option value="giallo">🟡 In attenzione</option>
-          <option value="rosso">🔴 A rischio</option>
-        </select>
-      </div>
-    </div>
-    ${projContext
-      ? `<div class="quick-link-notice">
-           ✓ Questo progetto verrà collegato automaticamente a: <strong>${projContext.nome}</strong>
-         </div>`
-      : `<div class="fg">
-           <label class="fl">Collega a Obiettivo ESG (opzionale)</label>
-           <select class="fi" id="newProjESGLink">
-             <option value="">— Nessun collegamento —</option>
-             ${obESG.map(o => `<option value="${o.id}">${o.nome}</option>`).join('')}
-           </select>
-         </div>`
-    }
   `;
 }
 
@@ -875,7 +834,6 @@ function editProgetti(obId) {
               <div style="font-size:14px; font-weight:700">${p.nome}</div>
               <div style="font-size:11px; color:var(--text-m); margin-top:2px">Avanzamento: ${p.pct}% · Aggiornato: ${formatDate(p.ult)}</div>
             </div>
-            <div class="sd-${p.sem}" style="width:10px;height:10px;border-radius:50%"></div>
           </label>
         `).join('')}
       </div>
