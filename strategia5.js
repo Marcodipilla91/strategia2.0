@@ -171,7 +171,7 @@ function renderESGTab() {
     <div class="lh-col col-own">Owner</div>
     <div class="lh-col col-tgt">Prospettiva KPI</div>
     <div class="lh-col col-scad">Prox. Scadenza</div>
-    <div class="lh-col col-sem">Stato <span class="info-icon" data-tooltip="🟢 Tutto ok: nessun ritardo oltre le 4 settimane&#10;🟡 Attenzione: ritardi tra 4 e 12 settimane&#10;🔴 A rischio: ritardi oltre le 12 settimane">i</span></div>
+    <div class="lh-col col-sem">Stato <span class="info-icon" data-tooltip="🟢 Tutto ok: scadenza futura o aggiornato entro 4 settimane&#10;🟡 Attenzione: nessun aggiornamento da 4 a 12 settimane&#10;🔴 A rischio: nessun aggiornamento da oltre 12 settimane">i</span></div>
   `;
 
   let list = obESG.filter(o => {
@@ -293,13 +293,39 @@ function renderBizTab() {
     <div class="lh-col col-tgt">Copertura Strategica</div>
   `;
 
-  if (!bizObj.length) {
-    $('mainList').innerHTML = `<div class="empty-state">Nessun obiettivo di business.</div>`;
+  // Filter bizObj: keep only those whose linked ESG objectives match active filters
+  let list = bizObj.filter(b => {
+    // Search on biz name
+    if (filters.search && !b.nome.toLowerCase().includes(filters.search)) return false;
+
+    // Dept filter: biz is visible only if it has ≥1 linked ESG obj in that dept
+    if (filters.dept) {
+      const hasMatchingDept = obESG.some(o => o.biz.includes(b.id) && o.dept === filters.dept);
+      if (!hasMatchingDept) return false;
+    }
+
+    // Status filter: biz is visible only if it has ≥1 linked ESG obj with that sem status
+    if (filters.status) {
+      const hasMatchingStatus = obESG.some(o => o.biz.includes(b.id) && calcSem(o) === filters.status);
+      if (!hasMatchingStatus) return false;
+    }
+
+    return true;
+  });
+
+  if (!list.length) {
+    $('mainList').innerHTML = `<div class="empty-state">Nessun obiettivo di business trovato con i filtri selezionati.</div>`;
     return;
   }
 
-  $('mainList').innerHTML = bizObj.map(b => {
-    const linkedESG = obESG.filter(o => o.biz.includes(b.id));
+  $('mainList').innerHTML = list.map(b => {
+    // When dept filter is active, show only matching ESG objs in the cascade
+    const linkedESG = obESG.filter(o => {
+      if (!o.biz.includes(b.id)) return false;
+      if (filters.dept && o.dept !== filters.dept) return false;
+      if (filters.status && calcSem(o) !== filters.status) return false;
+      return true;
+    });
     const totalProj = linkedESG.reduce((acc, o) => acc + o.progetti.length, 0);
     const expOpen = expanded[b.id] ? 'open' : '';
 
