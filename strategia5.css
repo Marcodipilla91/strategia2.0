@@ -25,6 +25,8 @@
     --blue-t: #1E40AF;
     --purple: #9C27B0;
     --purple-l: #F3E5F5;
+    --indigo: #4338CA;
+    --indigo-l: #EEF2FF;
     --text: #111827;
     --text-m: #6B7280;
     --text-l: #9CA3AF;
@@ -490,7 +492,7 @@ a {
     background: #F9FAFB;
 }
 
-.obj-row.expanded {
+.obj-row.open {
     background: #F5F7FA;
 }
 
@@ -547,7 +549,7 @@ a {
     font-size: 11px;
     font-weight: 700;
     color: var(--indigo);
-    background: #EEF2FF;
+    background: var(--indigo-l);
     padding: 4px 10px;
     border-radius: var(--rpill);
 }
@@ -1018,4 +1020,111 @@ a {
     color: var(--text-l);
     font-size: 14px;
     font-weight: 600;
+}
+
+/* ─── UNIFIED MODAL TABS ─── */
+.um-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--border);
+    margin-top: 4px;
+}
+
+.um-tab {
+    padding: 10px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-l);
+    cursor: pointer;
+    border: none;
+    background: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: var(--t);
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.um-tab:hover {
+    color: var(--text-m);
+    background: var(--bg);
+}
+
+.um-tab.active {
+    color: var(--green-d);
+    border-bottom-color: var(--green);
+}
+
+/* ─── QUICK ADD BUTTON ─── */
+.btn-quickadd {
+    background: var(--green-l);
+    color: var(--green-d);
+    border: 1.5px solid var(--green);
+    border-radius: var(--rs);
+    padding: 4px 12px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: var(--t);
+    line-height: 1.4;
+    font-family: inherit;
+    flex-shrink: 0;
+}
+
+.btn-quickadd:hover {
+    background: var(--green);
+    color: #fff;
+}
+
+/* ─── QUICK LINK NOTICE ─── */
+.quick-link-notice {
+    background: var(--green-l);
+    border: 1px solid var(--green);
+    border-radius: var(--rs);
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--green-t);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* ─── CASCADE (BUSINESS TAB EXPANDED) ─── */
+.cascade-esg-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--rs);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+}
+
+.cascade-esg-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.cascade-prog-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.cascade-projects {
+    border-top: 1px dashed var(--border);
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cascade-proj-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 4px 0;
 }
